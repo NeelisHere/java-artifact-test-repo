@@ -1,5 +1,6 @@
 name: Build Windows EXE
-
+permissions:
+  contents: write
 on:
   push:
     branches: [ main ]
@@ -31,10 +32,33 @@ jobs:
             --name MyApp ^
             --input target ^
             --main-jar test-java-app-1.0-SNAPSHOT.jar ^
-            --main-class org.patientManagement.Main
+            --main-class org.patientManagement.Main ^
+            --java-options "-Xmx512m" ^
+            --win-console
 
       - name: Upload EXE
         uses: actions/upload-artifact@v4
         with:
           name: MyApp-Windows
           path: MyApp-*.exe
+
+      - name: Download EXE artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: MyApp-Windows
+          path: dist
+
+      - name: Check the folders
+        run: |
+          ls -ltr
+          cd dist
+          ls -ltr
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.0
+          name: MyApp v1.0.0
+          files: dist/MyApp-*.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
