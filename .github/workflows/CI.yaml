@@ -1,0 +1,36 @@
+name: Build Windows EXE
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Build JAR
+        run: mvn clean package
+
+      - name: Build EXE
+        run: |
+          jpackage ^
+            --type exe ^
+            --name MyApp ^
+            --input target ^
+            --main-jar app.jar ^
+            --main-class com.example.DesktopApp
+
+      - name: Upload EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: MyApp-Windows
+          path: MyApp-*.exe
