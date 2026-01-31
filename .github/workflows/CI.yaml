@@ -48,12 +48,6 @@ jobs:
           name: MyApp-Windows
           path: dist
 
-      - name: Check the folders
-        run: |
-          ls -ltr
-          cd dist
-          ls -ltr
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
