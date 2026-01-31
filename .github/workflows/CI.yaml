@@ -18,7 +18,10 @@ jobs:
           java-version: 17
 
       - name: Build JAR
-        run: mvn clean package
+        run: mvn -q clean package
+
+      - name: Check jar files in the target folder
+        run: dir target
 
       - name: Build EXE
         shell: cmd
@@ -27,7 +30,7 @@ jobs:
             --type exe ^
             --name MyApp ^
             --input target ^
-            --main-jar app.jar ^
+            --main-jar test-java-app-1.0-SNAPSHOT.jar ^
             --main-class org.patientManagement.Main
 
       - name: Upload EXE
